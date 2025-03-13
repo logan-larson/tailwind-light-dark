@@ -1,0 +1,25 @@
+{
+  "name": "tailwind-light-dark-plugin",
+  "version": "0.1.0",
+  "description": "A Tailwind CSS plugin that generates shorthand utilities for light and dark mode color pairs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logan-larson/tailwind-light-dark-plugin.git"
+  },
+  "keywords": [
+    "tailwind",
+    "darkmode"
+  ],
+  "author": "Logan Larson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/logan-larson/tailwind-light-dark-plugin/issues"
+  },
+  "homepage": "https://github.com/logan-larson/tailwind-light-dark-plugin#readme",
+  "devDependencies": {
+    "tailwindcss": "^4.0.14"
+  }
+}
