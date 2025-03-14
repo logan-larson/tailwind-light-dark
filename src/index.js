@@ -1,37 +1,57 @@
-// @ts-ignore TODO: Add proper typing
 import plugin from 'tailwindcss/plugin'
 
 export default plugin(function({ addUtilities, theme }) {
     // Generate utilities for common color scales
-    const colors = theme('colors') as Record<string, any>;
+    const colors = theme('colors');
+    const colorData = {};
 
-    const colorData: Record<string, Record<string, string>> = {};
+    // Detect if we're using Tailwind v3 or v4 based on color structure
+    const isTailwindV4 = Object.keys(colors).some(key => key.includes('-'));
 
-    // Process each color and shade
-    // @ts-ignore TODO: Add proper typing
-    Object.entries(colors).forEach(([colorName, colorValues]) => {
-        // Skip if colorValues is not an object or is null
-        if (
-            colorName === '__CSS_VALUES__' || 
-            colorName === 'white' || 
-            colorName === 'black'
-        ) {
-            return;
-        }
-
-        // Build the data structure
-        const [name, number] = colorName.split('-');
-
-        colorData[name] = {
-            ...colorData[name],
-            [number]: colorValues
-        };
-    });
+    console.log(isTailwindV4);
     
-    const pipeUtilities: Record<string, any> = {};
+    if (isTailwindV4) {
+        // Process colors for Tailwind v4 (flattened format)
+        Object.entries(colors).forEach(([colorName, colorValues]) => {
+            // Skip if colorValues is not an object or is null
+            if (
+                colorName === '__CSS_VALUES__' || 
+                colorName === 'white' || 
+                colorName === 'black'
+            ) {
+                return;
+            }
+
+            // Build the data structure (v4 format)
+            const [name, number] = colorName.split('-');
+            
+            colorData[name] = {
+                ...colorData[name],
+                [number]: colorValues
+            };
+        });
+    } else {
+        // Process colors for Tailwind v3 (nested format)
+        Object.entries(colors).forEach(([colorName, colorShades]) => {
+            // Skip if not an object or special values
+            if (
+                colorName === '__CSS_VALUES__' || 
+                colorName === 'white' || 
+                colorName === 'black' ||
+                typeof colorShades !== 'object' ||
+                colorShades === null
+            ) {
+                return;
+            }
+            
+            // In v3, colorName is the color (e.g., 'slate') and colorShades is an object of shades
+            colorData[colorName] = colorShades;
+        });
+    }
+    
+    const pipeUtilities = {};
 
     // Generate utility classes for each color and shade pair
-    // @ts-ignore TODO: Add proper typing
     Object.entries(colorData).forEach(([colorName, shades]) => {
         const shadeKeys = Object.keys(shades);
 
@@ -190,7 +210,7 @@ export default plugin(function({ addUtilities, theme }) {
     addUtilities(pipeUtilities);
 })
 
-function addWhiteBlackUtilities(pipeUtilities: Record<string, any>) {
+function addWhiteBlackUtilities(pipeUtilities) {
     // Background utilities
     pipeUtilities[`.bg-white-black`] = {
         backgroundColor: 'white',

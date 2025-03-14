@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* @plugin 'tailwind-light-dark'; */
+@plugin '../src/index';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
