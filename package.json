@@ -1,6 +1,6 @@
 {
   "name": "tailwind-light-dark",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Tailwind CSS plugin that generates shorthand utilities for light and dark mode color pairs",
   "main": "src/index.js",
   "scripts": {
