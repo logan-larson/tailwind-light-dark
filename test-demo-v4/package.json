@@ -14,7 +14,7 @@
   "description": "",
   "devDependencies": {
     "@tailwindcss/vite": "^4.0.14",
-    "tailwind-light-dark": "file:../tailwind-light-dark-0.1.0.tgz",
+    "tailwind-light-dark": "file:../tailwind-light-dark-1.0.1.tgz",
     "tailwindcss": "^4.0.14",
     "vite": "^6.2.1"
   }

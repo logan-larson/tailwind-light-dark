@@ -14,8 +14,6 @@ export default plugin(function({ addUtilities, theme }) {
     } catch (error) {
         console.error('Error detecting Tailwind version:', error);
     }
-
-    console.log("isTailwindV4:", isTailwindV4);
     
     if (isTailwindV4) {
         // Process colors for Tailwind v4 (flattened format)
@@ -47,13 +45,10 @@ export default plugin(function({ addUtilities, theme }) {
     } else {
         // Process colors for Tailwind v3 (nested format)
         Object.entries(colors).forEach(([colorName, colorShades]) => {
-            // Skip if not an object or special values
             if (
                 colorName === '__CSS_VALUES__' || 
                 colorName === 'white' || 
-                colorName === 'black' ||
-                typeof colorShades !== 'object' ||
-                colorShades === null
+                colorName === 'black'
             ) {
                 return;
             }
