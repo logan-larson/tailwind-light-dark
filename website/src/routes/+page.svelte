@@ -1,9 +1,12 @@
-<script>
+<script lang="ts">
+    import CodeBlock from "$lib/components/CodeBlock.svelte";
 	import CopyButton from "$lib/components/CopyButton.svelte";
     import ThemeToggle from "$lib/components/ThemeToggle.svelte";
     import { ArrowDown } from "lucide-svelte";
 
-    const tailwindConfigCode = `// Add the plugin to your Tailwind config
+    let version: 'v3' | 'v4' = $state('v4');
+
+    const tailwindConfigCodeV3 = `// Add the plugin to your Tailwind config
 import lightDarkPlugin from 'tailwind-light-dark';
 
 /** @type {import('tailwindcss').Config} */
@@ -13,37 +16,25 @@ export default {
     plugins: [
         lightDarkPlugin,
     ],
-}
-    `;
+}`;
 
-    const addTailwindConfigCode = `
-// tailwind.config.js
-import lightDarkPlugin from 'tailwind-light-dark';
+    const tailwindConfigCodeV4 = `// Add the plugin to your app.css file
+@import tailwind;
 
-export default {
-    darkMode: 'class',
-    // ...
-    plugins: [
-        lightDarkPlugin,
-    ],
-}
-    `;
+@plugin 'tailwind-light-dark';
 
-    const toggleDarkMode = `
-// Toggle dark mode
+@custom-variant dark (&:where(.dark, .dark *));`;
 
-function toggleDarkMode() {
-    document.body.classList.toggle('dark');
+    const exampleUsageCode = `<div class="bg-stone-50-950 h-screen w-screen grid place-items-center">
+    <h1 class="text-black-white">Hello World</h1>
+    <button
+        class="bg-blue-300-700 hover:bg-blue-400-600 text-black-white"
+    >
+        Click me
+    </button>
+</div>`;
 
-    // Save preference
-    const isDark = document.body.classList.contains('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-}
-    `;
-
-    const customColors = `
-// tailwind.config.js
-export default {
+    const customColorsV3 = `export default {
   theme: {
     extend: {
       colors: {
@@ -63,23 +54,40 @@ export default {
       }
     }
   }
-}
-    `;
+}`;
+
+    const customColorsV4 = `@theme {
+  --color-avocado-50: oklch(0.99 0 0);
+  --color-avocado-100: oklch(0.99 0 0);
+  --color-avocado-200: oklch(0.98 0.04 113.22);
+  --color-avocado-300: oklch(0.94 0.11 115.03);
+  --color-avocado-400: oklch(0.92 0.19 114.08);
+  --color-avocado-500: oklch(0.84 0.18 117.33);
+  --color-avocado-600: oklch(0.53 0.12 118.34);
+  --color-avocado-700: oklch(0.42 0.11 118.34);
+  --color-avocado-800: oklch(0.32 0.09 118.34);
+  --color-avocado-900: oklch(0.22 0.06 118.34);
+  --color-avocado-950: oklch(0.12 0.03 118.34);
+}`;
+
+    const installCode = `npm install tailwind-light-dark
+# or
+yarn add tailwind-light-dark`;
 
 </script>
 
 <ThemeToggle />
 
 
-<main class="min-h-screen bg-stone-50-900 text-stone-900-50 pb-32">
+<main class="min-h-screen bg-stone-50-900 text-stone-900-50">
     <!-- Hero Section -->
     <section class="relative pt-24 pb-16 px-4 md:px-8">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center">
-                <h1 class="text-4xl md:text-6xl font-bold mb-4 pb-8 bg-clip-text bg-gradient-to-r from-blue-500-700 to-purple-500-700">
-                    TailwindCSS Light-Dark Plugin
+            <div class="text-center mb-12">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 pb-8">
+                    TailwindCSS <span class="text-blue-400-300">Light</span>-<span class="text-blue-800-700">Dark</span> Plugin
                 </h1>
-                <div class="flex flex-col gap-4 justify-center items-center px-4 py-2 mb-8 w-fit mx-auto">
+                <div class="flex flex-col gap-4 justify-center items-center sm:px-4 py-2 mb-8 w-fit mx-auto">
                     <div class="flex justify-center px-4 py-2 bg-white-black rounded-xl shadow-lg border-2 border-stone-200-800 w-fit mx-auto">
                         <pre><code>bg-emerald-100 dark:bg-emerald-900</code></pre>
                     </div>
@@ -97,18 +105,9 @@ export default {
                     </a>
                 </div>
             </div>
-            
-            <div class="mt-12 p-6 bg-white-black rounded-xl shadow-lg border-2 border-stone-200-800 max-w-3xl mx-auto">
-                <div class="font-mono text-sm md:text-base overflow-x-auto">
-                    <div class="flex items-center space-x-2 mb-4">
-                        <div class="h-3 w-3 rounded-full bg-red-400-600"></div>
-                        <div class="h-3 w-3 rounded-full bg-yellow-400-600"></div>
-                        <div class="h-3 w-3 rounded-full bg-green-400-600"></div>
-                        <span class="ml-2 text-stone-500-400">tailwind.config.js</span>
-                    </div>
-                    <pre class="text-stone-800-200"><code>{tailwindConfigCode}</code></pre>
-                </div>
-            </div>
+
+            <!-- Tailwind Config -->
+            <CodeBlock code={version === 'v3' ? tailwindConfigCodeV3 : tailwindConfigCodeV4} language={version === 'v3' ? 'tailwind.config.js' : 'app.css'} bind:version />
             
             <div class="mt-8 flex justify-center space-x-4">
                 <div class="inline-flex items-center px-4 py-2 rounded-full bg-stone-100-800 text-stone-700-200">
@@ -345,9 +344,7 @@ export default {
                 
                 <div class="mb-8">
                     <h4 class="text-lg font-medium mb-4">Define custom colors in your theme:</h4>
-                    <div class="font-mono text-sm p-4 bg-stone-200-700 rounded text-stone-800-200 overflow-x-auto">
-                        <pre><code>{customColors}</code></pre>
-                    </div>
+                    <CodeBlock code={version === 'v3' ? customColorsV3 : customColorsV4} language={version === 'v3' ? 'tailwind.config.js' : 'app.css'} bind:version />
                 </div>
                 
                 <div class="mb-6">
@@ -436,72 +433,30 @@ export default {
     
     <!-- Installation -->
     <section id="install" class="py-16 px-4 md:px-8 bg-white-black">
-        <div class="max-w-6xl mx-auto">
+        <div class="max-w-3xl mx-auto">
             <h2 class="text-3xl font-bold mb-8 text-center">Installation & Setup</h2>
             
-            <div class="grid md:grid-cols-3 gap-8 mb-12">
-                <div class="p-6 bg-stone-100-800 rounded-lg border border-stone-200-700">
+            <div class="flex flex-col gap-8 p-6 bg-stone-100-800 rounded-lg border border-stone-200-700">
+                <div>
                     <div class="flex items-center mb-4">
                         <div class="h-10 w-10 rounded-full bg-blue-100-900 flex items-center justify-center text-blue-900-100 font-bold mr-3">1</div>
                         <h3 class="text-xl font-semibold">Install the package</h3>
                     </div>
-                    <div class="font-mono text-sm p-4 bg-stone-200-700 rounded text-stone-800-200">
-                        <pre><code>npm install tailwind-light-dark
-# or
-yarn add tailwind-light-dark</code></pre>
-                    </div>
+                    <CodeBlock code={installCode} language="bash" bind:version showVersion={false} />
                 </div>
-                
-                <div class="p-6 bg-stone-100-800 rounded-lg border border-stone-200-700">
+                <div>
                     <div class="flex items-center mb-4">
                         <div class="h-10 w-10 rounded-full bg-blue-100-900 flex items-center justify-center text-blue-900-100 font-bold mr-3">2</div>
-                        <h3 class="text-xl font-semibold">Add to Tailwind config</h3>
+                        <h3 class="text-xl font-semibold">Configure with Tailwind</h3>
                     </div>
-                    <div class="font-mono text-sm p-4 bg-stone-200-700 rounded text-stone-800-200">
-                        <pre><code>{addTailwindConfigCode}</code></pre>
-                    </div>
+                    <CodeBlock code={version === 'v3' ? tailwindConfigCodeV3 : tailwindConfigCodeV4} language={version === 'v3' ? 'tailwind.config.js' : 'app.css'} bind:version />
                 </div>
-                
-                <div class="p-6 bg-stone-100-800 rounded-lg border border-stone-200-700">
+                <div>
                     <div class="flex items-center mb-4">
                         <div class="h-10 w-10 rounded-full bg-blue-100-900 flex items-center justify-center text-blue-900-100 font-bold mr-3">3</div>
-                        <h3 class="text-xl font-semibold mr-3">Add dark mode toggle</h3>
+                        <h3 class="text-xl font-semibold mr-3">Start using the plugin!</h3>
                     </div>
-                    <div class="font-mono text-sm p-4 bg-stone-200-700 rounded text-stone-800-200 relative">
-                        <div class="absolute right-3 top-3">
-                            <CopyButton text={toggleDarkMode} />
-                        </div>
-                        <pre>
-                            <code class="overflow-x-scroll">{toggleDarkMode}</code>
-                        </pre>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="p-6 bg-stone-100-800 rounded-lg">
-                <h3 class="text-xl font-semibold mb-4">Usage Examples</h3>
-                <div class="font-mono text-sm p-4 bg-stone-200-700 rounded text-stone-800-200 overflow-x-auto">
-                    <pre><code>&lt;!-- Background colors -->
-&lt;div class="bg-gray-100-900">&lt;/div>
-
-&lt;!-- Text colors -->
-&lt;p class="text-blue-700-300">&lt;/p>
-
-&lt;!-- Border colors -->
-&lt;div class="border border-red-300-700">&lt;/div>
-
-&lt;!-- Combine with other utilities -->
-&lt;button class="
-  px-4 py-2 
-  bg-blue-500-700 
-  text-white 
-  rounded 
-  hover:bg-blue-600-800 
-  focus:ring-2 
-  focus:ring-blue-400-500"
->
-  Click me
-&lt;/button></code></pre>
+                    <CodeBlock code={exampleUsageCode} language="html" bind:version showVersion={false} />
                 </div>
             </div>
         </div>
@@ -514,17 +469,18 @@ yarn add tailwind-light-dark</code></pre>
             <p class="text-xl mb-8 text-stone-700-300">Get started with tailwind-light-dark today and write less code for beautiful dark mode experiences.</p>
             
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="https://github.com/username/tailwind-light-dark" class="px-6 py-3 rounded-lg font-medium bg-stone-800-200 text-stone-100-800 hover:bg-stone-900-100 flex items-center justify-center">
+                <a href="https://github.com/logan-larson/tailwind-light-dark" class="px-6 py-3 rounded-lg font-medium bg-stone-800-200 text-stone-100-800 hover:bg-stone-900-100 flex items-center justify-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                     GitHub
                 </a>
-                <a href="#install" class="px-6 py-3 rounded-lg font-medium bg-blue-500-700 text-white hover:bg-blue-600-800 flex items-center justify-center">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+                <a href="https://www.npmjs.com/package/tailwind-light-dark" class="px-6 py-3 rounded-lg font-medium bg-red-500-700 text-white hover:bg-red-600-800 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 21H6a3 3 0 01-3-3V6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3zM6 5a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1z"></path>
+                        <rect x="12" y="9" width="4" height="10"></rect>
                     </svg>
-                    Install Now
+                    npm Package
                 </a>
                 <a href="#examples" class="px-6 py-3 rounded-lg font-medium bg-stone-100-800 text-stone-900-100 border border-stone-300-600 hover:bg-stone-200-700 flex items-center justify-center">
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -543,19 +499,15 @@ yarn add tailwind-light-dark</code></pre>
             <h3 class="text-xl font-bold mb-4">tailwind-light-dark</h3>
             <p class="mb-4 text-stone-300-700">A Tailwind CSS plugin that simplifies dark mode workflow with intuitive shorthand syntax.</p>
             <div class="flex space-x-4">
-                <a href="#" class="text-stone-300-600 hover:text-stone-100-900">
+                <a href="https://github.com/logan-larson/tailwind-light-dark" class="text-stone-300-600 hover:text-stone-100-900" aria-label="GitHub">
                     <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                     </svg>
                 </a>
-                <a href="#" class="text-stone-300-600 hover:text-stone-100-900">
-                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723 10.028 10.028 0 01-3.127 1.195 4.92 4.92 0 00-8.384 4.482C7.69 8.094 4.067 6.13 1.64 3.1a4.936 4.936 0 001.524 6.574 4.903 4.903 0 01-2.229-.618v.06a4.926 4.926 0 003.95 4.827 4.931 4.931 0 01-2.224.085 4.933 4.933 0 004.6 3.42 9.877 9.877 0 01-6.111 2.107c-.39 0-.78-.022-1.17-.066a13.995 13.995 0 007.557 2.21c9.054 0 14-7.496 14-14 0-.21 0-.42-.015-.63A10.016 10.016 0 0024 4.59z"/>
-                    </svg>
-                </a>
-                <a href="#" class="text-stone-300-600 hover:text-stone-100-900">
-                    <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm-1.993 14.7H7.593v-5.8h2.414v5.8zm-1.207-6.586c-.775 0-1.405-.63-1.405-1.405s.63-1.404 1.405-1.404 1.405.63 1.405 1.404-.63 1.405-1.405 1.405zm8.793 6.586h-2.412v-3.9c0-2.417-2.415-2.226-2.415 0v3.9h-2.413v-5.8h2.413v1.387c1.054-1.954 4.827-2.097 4.827 1.871v2.542z"/>
+                <a href="https://www.npmjs.com/package/tailwind-light-dark" class="text-stone-300-600 hover:text-stone-100-900" aria-label="npm Package">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 21H6a3 3 0 01-3-3V6a3 3 0 013-3h12a3 3 0 013 3v12a3 3 0 01-3 3zM6 5a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V6a1 1 0 00-1-1z"></path>
+                        <rect x="12" y="9" width="4" height="10"></rect>
                     </svg>
                 </a>
             </div>
@@ -565,24 +517,22 @@ yarn add tailwind-light-dark</code></pre>
             <div>
                 <h4 class="font-semibold mb-3">Resources</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-stone-300-700 hover:text-stone-100-900">Documentation</a></li>
-                    <li><a href="#" class="text-stone-300-700 hover:text-stone-100-900">GitHub</a></li>
-                    <li><a href="#" class="text-stone-300-700 hover:text-stone-100-900">npm Package</a></li>
-                    <li><a href="#" class="text-stone-300-700 hover:text-stone-100-900">Examples</a></li>
+                    <li><a href="https://github.com/logan-larson/tailwind-light-dark" class="text-stone-300-700 hover:text-stone-100-900" aria-label="GitHub">GitHub</a></li>
+                    <li><a href="https://www.npmjs.com/package/tailwind-light-dark" class="text-stone-300-700 hover:text-stone-100-900" aria-label="npm Package">npm Package</a></li>
+                    <li><a href="#examples" class="text-stone-300-700 hover:text-stone-100-900" aria-label="Examples">Examples</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="font-semibold mb-3">Support</h4>
                 <ul class="space-y-2">
-                    <li><a href="#" class="text-stone-300-700 hover:text-stone-100-900">FAQ</a></li>
-                    <li><a href="#" class="text-stone-300-700 hover:text-stone-100-900">Issues</a></li>
-                    <li><a href="#" class="text-stone-300-700 hover:text-stone-100-900">Contact</a></li>
+                    <li><a href="https://github.com/logan-larson/tailwind-light-dark/issues" class="text-stone-300-700 hover:text-stone-100-900" aria-label="Issues">Issues</a></li>
+                    <li><a href="mailto:loganlarson@caffeinatedstudios.dev" class="text-stone-300-700 hover:text-stone-100-900" aria-label="Contact">Contact</a></li>
                 </ul>
             </div>
         </div>
     </div>
     
     <div class="max-w-6xl mx-auto mt-8 pt-8 border-t border-stone-700-300">
-        <p class="text-center text-stone-400-600">&copy; 2023 tailwind-light-dark. All rights reserved.</p>
+        <p class="text-center text-stone-400-600">&copy; 2025 tailwind-light-dark. All rights reserved.</p>
     </div>
 </footer>
