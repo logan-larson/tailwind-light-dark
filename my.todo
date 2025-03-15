@@ -1,5 +1,10 @@
 
+Features:
+    ☐ Directional border utilities
+    ☐ prefers-color-scheme CSS media feature support
+    ☐ Data attribute manual switching support
+    ☐ Optional debug mode with plugin param
 
 Bugs:
     ✔ Improve v3 & v4 detection @done(25-03-15 10:06)
-        Got a collision with skeleton UI right now
+    ✔ SkeletonUI compatibility @done(25-03-15 11:15)
