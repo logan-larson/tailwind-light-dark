@@ -98,3 +98,7 @@ The plugin also provides convenient white/black pairs:
 ## License
 
 MIT
+
+## Inspiration
+
+This plugin was heavily inspired by [SkeletonUI](https://www.skeleton.dev/). They provide light-dark color pairings for their own themed colors (e.g. primary-100-900, secondary-600-400, surface-950-50, etc.) and I wanted light-dark pairings available for every tailwind color.

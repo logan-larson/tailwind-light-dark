@@ -10,7 +10,7 @@ export default plugin(function({ addUtilities, theme }) {
     try {
         const tailwindVersion = require('tailwindcss/package.json').version;
         const majorVersion = parseInt(tailwindVersion.split('.')[0]);
-        isTailwindV4 = majorVersion === 4;
+        isTailwindV4 = majorVersion >= 4;
     } catch (error) {
         console.error('Error detecting Tailwind version:', error);
     }
@@ -19,8 +19,8 @@ export default plugin(function({ addUtilities, theme }) {
     
     if (isTailwindV4) {
         // Process colors for Tailwind v4 (flattened format)
-        Object.entries(colors).forEach(([colorName, colorValues]) => {
-            // Skip if colorValues is not an object or is null
+        Object.entries(colors).forEach(([colorName, colorValue]) => {
+            // Skip special values and non-color entries
             if (
                 colorName === '__CSS_VALUES__' || 
                 colorName === 'white' || 
@@ -29,13 +29,20 @@ export default plugin(function({ addUtilities, theme }) {
                 return;
             }
 
-            // Build the data structure (v4 format)
-            const [name, number] = colorName.split('-');
-            
-            colorData[name] = {
-                ...colorData[name],
-                [number]: colorValues
-            };
+            // Only process keys that follow the color-shade pattern (like "red-500")
+            const parts = colorName.split('-');
+            // We expect exactly 2 parts: color name and a numeric shade
+            if (parts.length === 2 && !isNaN(parts[1])) {
+                const [name, shade] = parts;
+                
+                // Initialize color entry if it doesn't exist
+                if (!colorData[name]) {
+                    colorData[name] = {};
+                }
+                
+                // Add the shade
+                colorData[name][shade] = colorValue;
+            }
         });
     } else {
         // Process colors for Tailwind v3 (nested format)
@@ -51,8 +58,16 @@ export default plugin(function({ addUtilities, theme }) {
                 return;
             }
             
-            // In v3, colorName is the color (e.g., 'slate') and colorShades is an object of shades
-            colorData[colorName] = colorShades;
+            // Only include color objects that have numeric shade keys
+            const numericShades = Object.keys(colorShades).filter(shade => !isNaN(shade));
+            if (numericShades.length > 0) {
+                colorData[colorName] = {};
+                
+                // Only include numeric shades
+                numericShades.forEach(shade => {
+                    colorData[colorName][shade] = colorShades[shade];
+                });
+            }
         });
     }
     
