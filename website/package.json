@@ -19,7 +19,7 @@
 		"lucide-svelte": "^0.482.0",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
-		"tailwind-light-dark": "file:../tailwind-light-dark-0.1.0.tgz",
+		"tailwind-light-dark": "^1.0.1",
 		"tailwindcss": "^4.0.0",
 		"typescript": "^5.0.0",
 		"vite": "^6.0.0"
