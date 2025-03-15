@@ -6,9 +6,16 @@ export default plugin(function({ addUtilities, theme }) {
     const colorData = {};
 
     // Detect if we're using Tailwind v3 or v4 based on color structure
-    const isTailwindV4 = Object.keys(colors).some(key => key.includes('-'));
+    let isTailwindV4 = false;
+    try {
+        const tailwindVersion = require('tailwindcss/package.json').version;
+        const majorVersion = parseInt(tailwindVersion.split('.')[0]);
+        isTailwindV4 = majorVersion === 4;
+    } catch (error) {
+        console.error('Error detecting Tailwind version:', error);
+    }
 
-    console.log(isTailwindV4);
+    console.log("isTailwindV4:", isTailwindV4);
     
     if (isTailwindV4) {
         // Process colors for Tailwind v4 (flattened format)
