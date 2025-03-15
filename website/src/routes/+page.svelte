@@ -3,6 +3,7 @@
 	import CopyButton from "$lib/components/CopyButton.svelte";
     import ThemeToggle from "$lib/components/ThemeToggle.svelte";
     import { ArrowDown } from "lucide-svelte";
+    import Logo from "$lib/assets/tailwind-light-dark-logo.svg";
 
     let version: 'v3' | 'v4' = $state('v4');
 
@@ -79,11 +80,12 @@ yarn add tailwind-light-dark`;
 <ThemeToggle />
 
 
-<main class="min-h-screen bg-stone-50-900 text-stone-900-50">
+<main class="min-h-screen bg-stone-200-900 text-stone-950-50">
     <!-- Hero Section -->
     <section class="relative pt-24 pb-16 px-4 md:px-8">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-12">
+                <img src={Logo} alt="Tailwind Light-Dark Logo" class="w-80 h-80 mx-auto mb-4" />
                 <h1 class="text-4xl md:text-6xl font-bold mb-4 pb-8">
                     TailwindCSS <span class="text-blue-400-300">Light</span>-<span class="text-blue-800-700">Dark</span> Plugin
                 </h1>
@@ -100,7 +102,7 @@ yarn add tailwind-light-dark`;
                     <a href="#install" class="px-6 py-3 rounded-lg font-medium bg-blue-500-700 text-white hover:bg-blue-600-800 transition-colors">
                         Get Started
                     </a>
-                    <a href="#examples" class="px-6 py-3 rounded-lg font-medium bg-stone-200-700 text-stone-900-100 hover:bg-stone-300-600 transition-colors">
+                    <a href="#examples" class="px-6 py-3 rounded-lg font-medium bg-stone-50-950 text-stone-900-100 hover:bg-stone-100-900 transition-colors">
                         See Examples
                     </a>
                 </div>

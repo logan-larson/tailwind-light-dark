@@ -1,3 +1,10 @@
+<div align="center">
+    <br />
+    <a href="https://github.com/dcastil/tailwind-merge">
+        <img src="./tailwind-light-dark-logo.svg" alt="tailwind-light-dark" height="150px" />
+    </a>
+</div>
+
 # Tailwind Light-Dark Plugin
 
 A Tailwind CSS plugin that generates shorthand utilities for light and dark mode color pairs.

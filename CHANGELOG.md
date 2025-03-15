@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Reverted SkeletonUI compatibility :(
     - It didn't work
+- Cleaned up console logs
 
 ## [1.0.1] - 2025-03-15
 
