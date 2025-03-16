@@ -10,8 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Directional border utilities
 - prefers-color-scheme CSS media feature support
 - Data attribute manual switching support
-- Optional debug mode with plugin param
+- Debug mode with plugin param
 - Gradient support
+- Arbitrary values support
+- Opacity support
 
 ## [1.0.2] - 2025-03-15
 
