@@ -44,7 +44,7 @@ module.exports = {
   darkMode: 'class', // This is required
   // ...
   plugins: [
-    require('tailwind-light-dark'),
+    require('tailwind-light-dark')({ version = 3 }),
     // ...
   ],
 }

@@ -15,7 +15,7 @@
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
-    "tailwind-light-dark": "file:../tailwind-light-dark-1.0.1.tgz",
+    "tailwind-light-dark": "file:../tailwind-light-dark-1.0.2.tgz",
     "tailwindcss": "^3.4.17",
     "vite": "^6.2.1"
   }
