@@ -1,7 +1,8 @@
-import tailwindLightDark from 'tailwind-light-dark';
+// import tailwindLightDark from 'tailwind-light-dark';
 
 /** @type {import('tailwindcss').Config} */
-export default {
+// export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{html,js}",
@@ -27,7 +28,7 @@ export default {
     },
   },
   plugins: [
-    tailwindLightDark,
+    require('tailwind-light-dark')({ version: 3 }),
   ],
 }
 
